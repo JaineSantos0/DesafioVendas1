@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Program {
 
@@ -34,12 +33,16 @@ public class Program {
                 line = br.readLine();
             }
 
-            Comparator<Double> comp = Double::compareTo;
+            Comparator<Sale> comp = (s1, s2) -> s1.averagePrice().compareTo(s2.averagePrice());
 
-           List<Sale> saleList1 = saleList.stream().filter(x -> x.getYear() == 2016).collect(Collectors.toList());
+            List<Sale> saleList1 = saleList.stream().filter(x -> x.getYear() == 2016)
+                    .sorted(comp.reversed()).limit(5).collect(Collectors.toList());
+
+            System.out.println("Cinco primeiras vendas de 2016 de maior preço médio");
+            saleList1.forEach(System.out::println);
 
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Erro: " + e.getMessage());
         }
     }
 }
