@@ -33,13 +33,21 @@ public class Program {
                 line = br.readLine();
             }
 
-            Comparator<Sale> comp = (s1, s2) -> s1.averagePrice().compareTo(s2.averagePrice());
+            Comparator<Sale> comp = Comparator.comparing(Sale::averagePrice);
 
-            List<Sale> saleList1 = saleList.stream().filter(x -> x.getYear() == 2016)
+            List<Sale> top5Sale = saleList.stream().filter(sale -> sale.getYear() == 2016)
                     .sorted(comp.reversed()).limit(5).collect(Collectors.toList());
 
             System.out.println("Cinco primeiras vendas de 2016 de maior preço médio");
-            saleList1.forEach(System.out::println);
+            top5Sale.forEach(System.out::println);
+
+            saleList.removeIf(sale -> sale.getMonth() != 1 && sale.getMonth() != 7);
+
+            Double loganSeller = saleList.stream().filter(sale -> Objects.equals(sale.getSeller(), "Logan"))
+                    .map(Sale::getTotal)
+                    .reduce(0.00, Double::sum);
+
+            System.out.printf("%nValor total vendido pelo vendedor Logan nos meses 1 e 7 = %.2f",loganSeller);
 
         } catch (IOException e) {
             System.out.println("Erro: " + e.getMessage());
